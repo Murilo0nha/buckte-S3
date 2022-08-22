@@ -1,0 +1,31 @@
+nome : Sincronize o GitHub com o S3
+
+em :
+  empurre :
+    ramos :
+    - principal
+
+empregos :
+  implantar :
+    run-on : ubuntu-latest
+    passos :
+
+    - nome : repositório de compras
+      usa : actions/checkout@v1
+
+    - nome : Definir credenciais
+      usa : aws-actions/configure-aws-credentials@v1
+      com :
+        aws-access-key-id : ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key : ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token : ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region : us-east-1
+
+    - name : implanta objetos no bucket do S3
+      executar : |
+        aws s3 sync ./ s3://bucket-murilo \
+        --exclude '.git/*' \
+        --exclude '.github/*' \
+        --exclude 'README.md' \
+        --follow-symlinks \
+        --excluir
